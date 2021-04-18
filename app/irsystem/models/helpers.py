@@ -3,6 +3,8 @@ from flask import jsonify
 import base64
 import json
 import numpy as np
+import math
+from nltk.tokenize import TreebankWordTokenizer
 
 def http_json(result, bool):
 	result.update({ "success": bool })
@@ -47,3 +49,64 @@ def json_numpy_obj_hook(dct):
         data = base64.b64decode(dct['__ndarray__'])
         return np.frombuffer(data, dct['dtype']).reshape(dct['shape'])
     return dct
+
+def load_idx():
+    with open('data/jsons/json_idx.json') as json_file:
+        imported_idx = json.load(json_file)
+    return imported_idx
+
+def load_idf():
+    with open('data/jsons/json_idf.json') as json_file:
+        imported_idf = json.load(json_file)
+    return imported_idf
+
+def load_norms():
+    with open('data/jsons/json_norms.json') as json_file:
+        imported_norms = json.load(json_file)
+    return imported_norms
+
+def load_breed():
+    with open('data/jsons/json_breed.json') as json_file:
+        imported_breed = json.load(json_file)
+    return imported_breed
+
+treebank_tokenizer = TreebankWordTokenizer()
+
+def index_search(query, index, idf, doc_norms, tokenizer=treebank_tokenizer):
+    """Search the collection of documents for the given query"""
+    # Solve for query term frequencies
+    query_freq = dict()
+    for tok in tokenizer.tokenize(query.lower()):
+        if tok in query_freq:
+            query_freq[tok] += 1
+        else:
+            query_freq[tok] = 1
+    
+    # Solve for query norm
+    q_norm = 0
+    for word in query_freq:
+        if word in idf:
+            idf_val = idf[word]
+            q_norm += (idf_val*query_freq[word])**2
+    q_norm = math.sqrt(q_norm)
+    
+    # calculate numerator values of cosine similarity for each document
+    numerators = dict() # doc_id -> cumulative numerator
+    for word in index:
+        if word in idf:
+            for tup in index[word]:
+                doc_id = tup[0]
+                if word in query_freq:
+                    if doc_id not in numerators:
+                        numerators[doc_id] = 0
+                    numerators[doc_id] += query_freq[word] * tup[1] * idf[word]**2
+    
+    results = []
+    # divide each numerator by the appropriate denominator, add to list in tuple form
+    for doc_id in numerators:
+        denom = q_norm * doc_norms[doc_id]
+        score = numerators[doc_id] / denom
+        results.append((score, doc_id))
+    # sort tuple list in descending order by score, then doc_id
+    results = sorted(results, key=lambda e: (e[0], -e[1]), reverse=True)
+    return results
