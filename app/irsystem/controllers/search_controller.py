@@ -24,6 +24,6 @@ def search():
 		for i in range(len(results)):
 			score = results[i][0]
 			msg_id = results[i][1]
-			data[i] = str(i) + ": " + str(breeds[msg_id]) + "(" + str(score) + ")"
+			data[i] = str(i+1) + ": " + str(breeds[msg_id]) + "(" + str(score) + ")"
 		data = data[:10]
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
