@@ -35,7 +35,7 @@ def search():
 			data[i]['page_url'] = results[i]['URL_petguide']
 			data[i]['image_url'] = results[i]['URL_image']
 		if (len(data) == 0):
-			data = ["no items matched:( try a different keyword!"]
+			data = []
 		else:
 			data = data[:10]
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)

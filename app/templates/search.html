@@ -36,6 +36,9 @@
             <img src="{{d['image_url']}}" />
             <br>
             {% endfor %}
+            {% else %}
+            <br>
+            <p>No items matched. Try a different query!</p>
             {% endif %}
         </div>
     </form>
