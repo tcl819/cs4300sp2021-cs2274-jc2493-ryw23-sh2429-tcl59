@@ -1,5 +1,6 @@
 # Methods to compose HTTP response JSON 
 from flask import jsonify
+import re
 import base64
 import json
 import numpy as np
@@ -110,3 +111,39 @@ def index_search(query, index, idf, doc_norms, tokenizer=treebank_tokenizer):
     # sort tuple list in descending order by score, then doc_id
     results = sorted(results, key=lambda e: (e[0], -e[1]), reverse=True)
     return results
+
+def first_n_sentences(breed, input_info, n_sentences):
+    """
+    Parameters: 
+        breed: string specifying the name of the breed
+        input_info: Dictionary of breeds of a specific animal type
+    Returns: string containing the first three sentences of the breed information """
+    text = input_info[breed]['text']
+    regex = '(?<![A-Z])[.!?]\s+(?=[A-Z])'
+    match = re.split(regex, text)
+    result = ""
+    for sentence in range(n_sentences):
+        result = result + match[sentence] + ".  "
+    return result
+
+def process_results(index_search_function, query, index, idf, doc_norms, breed_info, tokenizer=treebank_tokenizer):
+    """Returns: list of dictionaries as shown below for the top ten results...
+             'name': name of the breed,
+             'text': The first three sentences from the text from petguides.com,
+             'URL_petguide': URL leading to the petguides website,
+             'URL_image': URL for the image from petguides.com"""
+
+    final_results = []
+    breeds = list(breed_info.keys())
+    raw_results = index_search_function(query, index, idf, doc_norms, tokenizer)
+    # return top 10 results with fields for name, text to output, URL to petguides, URL for image  
+    for result in raw_results:
+        result_dict = {}
+        result_dict['name'] = breed_info[breeds[result[1]]]['name']
+        result_dict['text'] = first_n_sentences(breeds[result[1]], breed_info, 4)
+        result_dict['score'] = result[0]
+        result_dict['URL_petguide'] = "#" if not 'page_url' in list(breed_info[breeds[result[1]]].keys()) else breed_info[breeds[result[1]]]['page_url']
+        result_dict['URL_image'] = "#" if not 'image_url' in list(breed_info[breeds[result[1]]].keys()) else breed_info[breeds[result[1]]]['image_url']
+        final_results.append(result_dict)
+    
+    return final_results
