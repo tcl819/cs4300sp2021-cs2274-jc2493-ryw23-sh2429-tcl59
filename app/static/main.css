@@ -37,3 +37,14 @@ border: none
 .step-links a{
 color: #4285F4;
 }
+label {
+    cursor:pointer;
+    filter: grayscale(100%);
+}
+
+label:hover {
+    filter: grayscale(0);
+}
+input[type="radio"]:checked + label {
+    filter: grayscale(0);
+}

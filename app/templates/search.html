@@ -19,29 +19,56 @@
         <br><br>
 
         <div class="form-group">
-            <input id="input" type="text" name="search" class="form-control" placeholder="Your Input">
+            <input id="input" type="text" name="search" class="form-control" placeholder="loud, energetic, etc.">
         </div>
         <button type="submit" class="btn btn-info"> Go! </button>
     </form>
-    <form class="form-inline global-search">
-        <div class="container">
-            <h1>{{output_message}}</h1>
-            {% if data %}
-            {% for d in data %}
-            <br>
-            <p>{{d['pos']|string + ": "}} <a href="{{d['page_url']}}">{{ d['name']}} </a>{{" (" + d['score']|string +
-                ")"}}
-            </p>
-            <p>{{d['text']}}</p>
-            <img src="{{d['image_url']}}" />
-            <br>
-            {% endfor %}
-            {% else %}
-            <br>
-            <p>No items matched. Try a different query!</p>
-            {% endif %}
+
+    <div class="container">
+        <h1 class="text-center">{{output_message}}</h1>
+        <br>
+        {% if data %}
+        {% for d in data %}
+        <br>
+        <div class="card p-10">
+            <div class="row justify-content-start">
+                <div class="col">
+                    <img src="{{d['image_url']}}" alt="Picture of {{d['name']}}"
+                        class="rounded card-body img-fluid align-self-center" style="border-radius:20px !important" />
+                </div>
+                <div class="col-7">
+                    <div class="card-body text-start">
+                        <input type="radio" name="rating-{{d['pos']}}" class="sr-only" id="downvote-{{d['pos']}}">
+                        <label for="downvote-{{d['pos']}}">
+                            <img src="../static/img/thumb-down.png" alt="Thumbs down" class="float-end mx-1"
+                                style="width:30px; height:auto" />
+                        </label>
+                        <input type="radio" name="rating-{{d['pos']}}" class="sr-only" id="upvote-{{d['pos']}}">
+                        <label for="upvote-{{d['pos']}}">
+                            <img src="../static/img/thumb-up.png" alt="Thumbs up" class="float-end mx-1"
+                                style="width:30px; height:auto" />
+                        </label>
+
+                        <h4 class="card-title">
+                            {{d['pos']|string + ": "}} <a href="{{d['page_url']}}">{{d['name']}}</a>
+                        </h4>
+
+
+                        <br>
+                        <h5>Score: {{d['score']|string}}</h5>
+                        <p class="card-text">{{d['text']}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
+
+        <br>
+        {% endfor %}
+        {% else %}
+        <br>
+        <p>No items matched. Try a different query!</p>
+        {% endif %}
+    </div>
 </body>
 
 </html>
