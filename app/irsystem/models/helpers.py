@@ -6,6 +6,7 @@ import json
 import numpy as np
 import math
 from nltk.tokenize import TreebankWordTokenizer
+from nltk.stem import PorterStemmer
 
 def http_json(result, bool):
 	result.update({ "success": bool })
@@ -74,7 +75,9 @@ def load_breed():
 treebank_tokenizer = TreebankWordTokenizer()
 
 def index_search(query, index, idf, doc_norms, tokenizer=treebank_tokenizer):
-    """Search the collection of documents for the given query"""
+    """
+    Search the collection of documents for the given query
+    """
     # Solve for query term frequencies
     query_freq = dict()
     for tok in tokenizer.tokenize(query.lower()):
@@ -117,7 +120,8 @@ def first_n_sentences(breed, input_info, n_sentences):
     Parameters: 
         breed: string specifying the name of the breed
         input_info: Dictionary of breeds of a specific animal type
-    Returns: string containing the first three sentences of the breed information """
+    Returns: string containing the first three sentences of the breed information
+    """
     text = input_info[breed]['text']
     regex = '(?<![A-Z])[.!?]\s+(?=[A-Z])'
     match = re.split(regex, text)
@@ -126,12 +130,54 @@ def first_n_sentences(breed, input_info, n_sentences):
         result = result + match[sentence] + ".  "
     return result
 
+def query_to_vec(inverted_idx, query, idf):
+    """
+    """
+    porter_stemmer = PorterStemmer()
+    tokenizer = treebank_tokenizer
+
+    index_to_word = to_list(inverted_idx.keys())
+    word_to_index = {t: i for i, t in enumerate(index_to_word)}
+    query_vec = np.zeros(len(index_to_word))
+
+    query = query.lower()
+    regex = '[a-z]+'
+    match = re.findall(regex,query)
+    tokens = [porter_stemmer.stem(word) for word in match]
+
+    for tok in tokens:
+        ind = word_to_index(tok)
+        query_vec[ind] = (1/len(tokens))/idf[tok]
+    return query_vec
+
+
+def create_tf_idf_mat(breed_info, index, idf):
+    """
+    """
+    index_to_word = to_list(index.keys())
+    word_to_index = {t: i for i, t in enumerate(index_to_word)}
+
+    arr = np.zeros((len(breed_info), len(index)))
+
+    for word in index:
+        if word in idf:
+            for tup in index[word]:
+                doc_id = tup[0]
+                tf = tup[1]
+                arr[tup[0]][word_to_index[word]] = tf * idf[word]
+    return arr
+
+
+
 def process_results(index_search_function, query, index, idf, doc_norms, breed_info, tokenizer=treebank_tokenizer):
-    """Returns: list of dictionaries as shown below for the top ten results...
+    """
+    Returns: list of dictionaries as shown below for the top ten results...
              'name': name of the breed,
              'text': The first three sentences from the text from petguides.com,
+             'score': Similarity score
              'URL_petguide': URL leading to the petguides website,
-             'URL_image': URL for the image from petguides.com"""
+             'URL_image': URL for the image from petguides.com
+    """
 
     final_results = []
     breeds = list(breed_info.keys())
