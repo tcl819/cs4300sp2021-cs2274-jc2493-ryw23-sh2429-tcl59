@@ -11,7 +11,7 @@
         <p>Project Name: {{ name }}</p>
         <p>Group Members: {{ netid }}</p>
     </div>
-    <form class="form-inline global-search">
+    <form class="form-inline global-search" method="get">
         <h1 style="font-size: 55px; font-family:Futura">
             Zoogle Search
         </h1>
@@ -19,7 +19,8 @@
         <br><br>
 
         <div class="form-group">
-            <input id="input" type="text" name="search" class="form-control" placeholder="loud, energetic, etc.">
+            <input id="input" type="text" name="search" class="form-control" placeholder="loud, energetic, etc."
+                value="{% if query %}{{query}}{% endif %}">
         </div>
         <button type="submit" class="btn btn-info"> Go! </button>
     </form>
@@ -28,47 +29,59 @@
         <h1 class="text-center">{{output_message}}</h1>
         <br>
         {% if data %}
-        {% for d in data %}
-        <br>
-        <div class="card p-10">
-            <div class="row justify-content-start">
-                <div class="col">
-                    <img src="{{d['image_url']}}" alt="Picture of {{d['name']}}"
-                        class="rounded card-body img-fluid align-self-center" style="border-radius:20px !important" />
-                </div>
-                <div class="col-7">
-                    <div class="card-body text-start">
-                        <fieldset style="display:inline !important" class="float-end">
-                            <input type="radio" name="rating-{{d['pos']}}" class="visually-hidden"
-                                id="upvote-{{d['pos']}}">
-                            <label for="upvote-{{d['pos']}}">
-                                <img src="../static/img/thumb-up.png" alt="Thumbs up" class="mx-1"
-                                    style="width:30px; height:auto" />
-                            </label>
-                            <input type="radio" name="rating-{{d['pos']}}" class="visually-hidden"
-                                id="downvote-{{d['pos']}}">
-                            <label for="downvote-{{d['pos']}}">
-                                <img src="../static/img/thumb-down.png" alt="Thumbs down" class="mx-1"
-                                    style="width:30px; height:auto" />
-                            </label>
-                        </fieldset>
+        <form method="get">
+            {% if query %}
+            <input type="hidden" name="search" value="{{query}}">
+            {% endif %}
+            {% for d in data %}
+            <br>
+            <div class="card p-10">
+                <div class="row justify-content-start">
+                    <div class="col">
+                        <img src="{{d['image_url']}}" alt="Picture of {{d['name']}}"
+                            class="rounded card-body img-fluid align-self-center"
+                            style="border-radius:20px !important" />
+                    </div>
+                    <div class="col-7">
+                        <div class="card-body text-start">
+                            <fieldset style="display:inline !important" class="float-end">
+                                <input type="radio" name="rating-{{d['pos']}}" class="visually-hidden"
+                                    id="neutral-{{d['pos']}}" value="0" {% if not feedback or (feedback and
+                                    feedback[d['pos']-1]=="0" ) %}checked{% endif %}>
+                                <input type="radio" name="rating-{{d['pos']}}" class="visually-hidden"
+                                    id="upvote-{{d['pos']}}" value="1" {% if feedback and feedback[d['pos']-1]=="1"
+                                    %}checked{% endif %}>
+                                <label for="upvote-{{d['pos']}}">
+                                    <img src="../static/img/thumb-up.png" alt="Thumbs up" class="mx-1"
+                                        style="width:30px; height:auto" />
+                                </label>
+                                <input type="radio" name="rating-{{d['pos']}}" class="visually-hidden"
+                                    id="downvote-{{d['pos']}}" value="-1" {% if feedback and feedback[d['pos']-1]=="-1"
+                                    %}checked{% endif %}>
+                                <label for="downvote-{{d['pos']}}">
+                                    <img src="../static/img/thumb-down.png" alt="Thumbs down" class="mx-1"
+                                        style="width:30px; height:auto" />
+                                </label>
+                            </fieldset>
 
 
-                        <h4 class="card-title">
-                            {{d['pos']|string + ": "}} <a href="{{d['page_url']}}">{{d['name']}}</a>
-                        </h4>
+                            <h4 class="card-title">
+                                {{d['pos']|string + ": "}} <a href="{{d['page_url']}}">{{d['name']}}</a>
+                            </h4>
 
 
-                        <br>
-                        <h5>Score: {{d['score']|string}}</h5>
-                        <p class="card-text">{{d['text']}}</p>
+                            <br>
+                            <h5>Score: {{d['score']|string}}</h5>
+                            <p class="card-text">{{d['text']}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <br>
-        {% endfor %}
+            <br>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+        </form>
         {% else %}
         <br>
         <p>No items matched. Try a different query!</p>

@@ -16,6 +16,10 @@ def search():
 	
 	# DO NOT CHANGE FROM 0 RIGHT NOW
 	filter_id = 0 # 0 for all, 1-7 for the seven breeds
+	index = inv_idx[filter_id]
+	idf = idf_dict[filter_id]
+	norm = norms[filter_id]
+	info = breeds_info[filter_id]
 
 	if not query:
 		data = []
@@ -23,14 +27,9 @@ def search():
 	else:
 		output_message = "Your search: " + query
 		# results = index_search(query, combined_inv_idx, combined_idf_dict, combined_doc_norms)
-		results = process_results(query, inv_idx[filter_id], idf_dict[filter_id], norms[filter_id], breeds_info[filter_id])
+		results = process_results(query, index, idf, norm, info)
 		data = []
-		breeds = list(breeds_info[filter_id].keys())
 		for i in range(len(results)):
-			# score = results[i][0]
-			# msg_id = results[i][1]
-			# data[i] = str(i+1) + ": " + str(combined_breeds_info[breeds[msg_id]]['name']) + " (" + str(score) + ")"
-			
 			data.append(dict())
 			data[i]['name'] = results[i]['name']
 			data[i]['score'] = results[i]['score']
@@ -42,4 +41,13 @@ def search():
 			data = []
 		else:
 			data = data[:10]
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+	
+	feedback = []
+	for i in range(10):
+		f = request.args.get('rating-'+str(i+1))
+		if f is not None:
+			feedback.append(f)
+	
+	if feedback:
+		print(feedback)
+	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, feedback=feedback)
