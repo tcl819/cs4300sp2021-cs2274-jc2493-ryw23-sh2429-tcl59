@@ -55,23 +55,63 @@ def json_numpy_obj_hook(dct):
     return dct
 
 def load_idx():
-    with open('data/jsons/json_idx.json') as json_file:
-        imported_idx = json.load(json_file)
+    inv_idx_file_names = ['json_idx.json',
+                      'json_idx_bird.json',
+                      'json_idx_dog.json',
+                      'json_idx_cat.json',
+                      'json_idx_fish.json',
+                      'json_idx_horse.json',
+                      'json_idx_rabbit.json',
+                      'json_idx_turtle.json']
+    imported_idx = []
+    for i in range(0,8):
+        with open('data/jsons/inv_idx/' + inv_idx_file_names[i]) as json_file:
+            imported_idx.append(json.load(json_file))
     return imported_idx
 
 def load_idf():
-    with open('data/jsons/json_idf.json') as json_file:
-        imported_idf = json.load(json_file)
+    idf_dict_file_names = ['json_idf.json',
+                       'json_idf_bird.json', 
+                       'json_idf_dog.json',
+                       'json_idf_cat.json',
+                       'json_idf_fish.json',
+                       'json_idf_horse.json',
+                       'json_idf_rabbit.json',
+                       'json_idf_turtle.json']
+    imported_idf = []
+    for i in range(0,8):
+        with open('data/jsons/idf_dict/' + idf_dict_file_names[i]) as json_file:
+            imported_idf.append(json.load(json_file))
     return imported_idf
 
 def load_norms():
-    with open('data/jsons/json_norms.json') as json_file:
-        imported_norms = json.load(json_file)
+    doc_norms_file_names = ['json_norms.json',
+                       'json_norms_bird.json', 
+                       'json_norms_dog.json',
+                       'json_norms_cat.json',
+                       'json_norms_fish.json',
+                       'json_norms_horse.json',
+                       'json_norms_rabbit.json',
+                       'json_norms_turtle.json']
+    imported_norms = []
+    for i in range(0,8):
+        with open('data/jsons/doc_norms/' + doc_norms_file_names[i]) as json_file:
+            imported_norms.append(json.load(json_file))
     return imported_norms
 
 def load_breed():
-    with open('data/jsons/json_breed.json') as json_file:
-        imported_breed = json.load(json_file)
+    breed_info_file_names = ['json_breed.json',
+                       'json_breed_bird.json', 
+                       'json_breed_dog.json',
+                       'json_breed_cat.json',
+                       'json_breed_fish.json',
+                       'json_breed_horse.json',
+                       'json_breed_rabbit.json',
+                       'json_breed_turtle.json']
+    imported_breed = []
+    for i in range(0,8):
+        with open('data/jsons/breed_info/' + breed_info_file_names[i]) as json_file:
+            imported_breed.append(json.load(json_file))
     return imported_breed
 
 

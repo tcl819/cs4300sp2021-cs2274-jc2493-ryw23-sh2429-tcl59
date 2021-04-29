@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\app",
+    "\\app\\irsystem",
+    "\\app\\irsystem\\controllers",
+    "\\app\\irsystem\\models",
+    "\\app\\templates"
+  ],
+  "SelectedNode": "\\app\\templates\\search.html",
+  "PreviewInSolutionExplorer": false
+}
