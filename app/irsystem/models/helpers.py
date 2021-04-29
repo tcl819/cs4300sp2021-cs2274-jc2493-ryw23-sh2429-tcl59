@@ -114,14 +114,22 @@ def load_breed():
             imported_breed.append(json.load(json_file))
     return imported_breed
 
+def load_query_mat():
+    with open('data/jsons/json_query_mat.json') as json_file:
+        query_mat = json.load(json_file)
+    return query_mat
+
+def save_query_mat(query_mat):
+    with open('data/jsons/json_query_mat.json', 'w') as json_file:
+        json.dump(query_mat, json_file)
+
 
 def index_search(query, input_doc_mat, index, idf, doc_norms, tokenizer=treebank_tokenizer):
     """
     Search the collection of documents for the given query
     """
     # load query_mat
-    with open('data/jsons/json_query_mat.json') as json_file:
-        query_mat = json.load(json_file)
+    query_mat = load_query_mat()
 
     if query in query_mat:
         query_vec = np.array(query_mat[query]['vec'])
@@ -149,9 +157,6 @@ def index_search(query, input_doc_mat, index, idf, doc_norms, tokenizer=treebank
                 idf_val = idf[word]
                 q_norm += (idf_val*query_freq[word])**2
         q_norm = math.sqrt(q_norm)
-        
-        word_to_index = {t: i for i, t in enumerate(list(index.keys()))}
-        query_vec = np.zeros(len(index))
 
         # calculate numerator values of cosine similarity for each document
         numerators = dict() # doc_id -> cumulative numerator
@@ -163,9 +168,9 @@ def index_search(query, input_doc_mat, index, idf, doc_norms, tokenizer=treebank
                         if doc_id not in numerators:
                             numerators[doc_id] = 0
                         numerators[doc_id] += query_freq[word] * tup[1] * idf[word]**2
-                        query_vec[word_to_index[word]] = query_freq[word] * idf[word]
         
         # store query and its associated query_vec in query_mat
+        query_vec = query_to_vec(query, index, idf)
         query_mat[query] = dict()
         query_mat[query]['vec'] = query_vec.tolist()
         query_mat[query]['relevant'] = []
@@ -182,8 +187,7 @@ def index_search(query, input_doc_mat, index, idf, doc_norms, tokenizer=treebank
     results = sorted(results, key=lambda e: (e[0], -e[1]), reverse=True)
 
     # save query_mat
-    with open('data/jsons/json_query_mat.json', 'w') as json_file:
-        json.dump(query_mat, json_file)
+    save_query_mat(query_mat)
     
     return results
 
@@ -225,8 +229,9 @@ def query_to_vec(query, inverted_idx, idf):
     match = re.findall(regex,query)
     tokens = [porter_stemmer.stem(word) for word in match]
 
+    print(tokens)
     for tok in tokens:
-        ind = word_to_index(tok)
+        ind = word_to_index[tok]
         query_vec[ind] = (1/len(tokens))/idf[tok]
     return query_vec
 
@@ -261,20 +266,22 @@ def rocchio(query, query_mat, input_doc_mat, a=1, b=0.5, c=0.5):
     """
     Precondition: query is in query_mat
 
-    Parameters:
-    query: string
     query_mat: dictionary, query -> dictionary
         query_mat[key]['relevant']: list of IDs of relevant docs
         query_mat[key]['irrelevant']: list of IDs of irrelevant docs
         query_mat[key]['vec']: numpy TF-IDF vector of query
+
+    Parameters:
+    query: string
     input_doc_mat: # of docs x # of terms numpy matrix of TF-IDF weights
 
     Returns:
     numpy TF-IDF vector
     """
+    # load query_mat
     relevant = query_mat[query]['relevant']
     irrelevant = query_mat[query]['irrelevant']
-    vec = query_mat[query]['vec']
+    vec = np.array(query_mat[query]['vec'])
 
     relevant_w = 0 if len(relevant) == 0 else 1/len(relevant)
     irrelevant_w = 0 if len(irrelevant) == 0 else 1/len(irrelevant)
@@ -287,7 +294,7 @@ def rocchio(query, query_mat, input_doc_mat, a=1, b=0.5, c=0.5):
     for doc_id in irrelevant:
         irrel_vec += input_doc_mat[doc_id]
     
-    result = a * query_vec + b * relevant_w * rel_vec - c * irrelevant_w * irrel_vec
+    result = a * vec + b * relevant_w * rel_vec - c * irrelevant_w * irrel_vec
     return result.clip(min=0)
 
 
@@ -314,6 +321,7 @@ def process_results(query, index, idf, doc_norms, breed_info, tokenizer=treebank
     # return top 10 results with fields for name, text to output, URL to petguides, URL for image  
     for result in raw_results:
         result_dict = {}
+        result_dict['raw_name'] = breeds[result[1]]
         result_dict['name'] = breed_info[breeds[result[1]]]['name']
         result_dict['text'] = first_n_sentences(breeds[result[1]], breed_info, 4)
         result_dict['score'] = result[0]

@@ -31,6 +31,7 @@ def search():
 		data = []
 		for i in range(len(results)):
 			data.append(dict())
+			data[i]['raw_name'] = results[i]['raw_name']
 			data[i]['name'] = results[i]['name']
 			data[i]['score'] = results[i]['score']
 			data[i]['text'] = results[i]['text']
@@ -49,5 +50,29 @@ def search():
 			feedback.append(f)
 	
 	if feedback:
-		print(feedback)
+		# load query_mat
+		query_mat = load_query_mat()
+		docs = list(info.keys())
+		breed_to_index = {t: i for i, t in enumerate(docs)}
+		for i in range(10):
+			# breed_name = data[i]['name']
+			doc_id = breed_to_index[data[i]['raw_name']]
+			
+			if feedback[i] == "1":
+				if doc_id not in query_mat[query]['relevant']:
+					query_mat[query]['relevant'].append(doc_id)
+				if doc_id in query_mat[query]['irrelevant']:
+					query_mat[query]['irrelevant'].remove(doc_id)
+			elif feedback[i] == "-1":
+				if doc_id not in query_mat[query]['irrelevant']:
+					query_mat[query]['irrelevant'].append(doc_id)
+				if doc_id in query_mat[query]['relevant']:
+					query_mat[query]['relevant'].remove(doc_id)
+		
+		input_doc_mat = create_tf_idf_mat(len(info), index, idf)
+		updated_vec = rocchio(query, query_mat, input_doc_mat)
+		query_mat[query]['vec'] = updated_vec.tolist()
+		save_query_mat(query_mat)
+
+
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, feedback=feedback)
