@@ -13,15 +13,16 @@ breeds_info = load_breed()
 @irsystem.route('/', methods=['GET'])
 def search():
 	query = request.args.get('search')
+	filter_id = 5 # 0 for all, 1-7 for the seven breeds
 	if not query:
 		data = []
 		output_message = ""
 	else:
 		output_message = "Your search: " + query
 		# results = index_search(query, combined_inv_idx, combined_idf_dict, combined_doc_norms)
-		results = process_results(index_search, query, inv_idx, idf_dict, norms, breeds_info)
+		results = process_results(index_search, query, inv_idx[filter_id], idf_dict[filter_id], norms[filter_id], breeds_info[filter_id])
 		data = []
-		breeds = list(breeds_info.keys())
+		breeds = list(breeds_info[filter_id].keys())
 		for i in range(len(results)):
 			# score = results[i][0]
 			# msg_id = results[i][1]
