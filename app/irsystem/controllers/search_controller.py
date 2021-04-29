@@ -13,7 +13,10 @@ breeds_info = load_breed()
 @irsystem.route('/', methods=['GET'])
 def search():
 	query = request.args.get('search')
+	
+	# DO NOT CHANGE FROM 0 RIGHT NOW
 	filter_id = 0 # 0 for all, 1-7 for the seven breeds
+
 	if not query:
 		data = []
 		output_message = ""
