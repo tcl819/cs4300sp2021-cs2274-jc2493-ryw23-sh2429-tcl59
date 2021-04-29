@@ -38,16 +38,21 @@
                 </div>
                 <div class="col-7">
                     <div class="card-body text-start">
-                        <input type="radio" name="rating-{{d['pos']}}" class="sr-only" id="downvote-{{d['pos']}}">
-                        <label for="downvote-{{d['pos']}}">
-                            <img src="../static/img/thumb-down.png" alt="Thumbs down" class="float-end mx-1"
-                                style="width:30px; height:auto" />
-                        </label>
-                        <input type="radio" name="rating-{{d['pos']}}" class="sr-only" id="upvote-{{d['pos']}}">
-                        <label for="upvote-{{d['pos']}}">
-                            <img src="../static/img/thumb-up.png" alt="Thumbs up" class="float-end mx-1"
-                                style="width:30px; height:auto" />
-                        </label>
+                        <fieldset style="display:inline !important" class="float-end">
+                            <input type="radio" name="rating-{{d['pos']}}" class="visually-hidden"
+                                id="upvote-{{d['pos']}}">
+                            <label for="upvote-{{d['pos']}}">
+                                <img src="../static/img/thumb-up.png" alt="Thumbs up" class="mx-1"
+                                    style="width:30px; height:auto" />
+                            </label>
+                            <input type="radio" name="rating-{{d['pos']}}" class="visually-hidden"
+                                id="downvote-{{d['pos']}}">
+                            <label for="downvote-{{d['pos']}}">
+                                <img src="../static/img/thumb-down.png" alt="Thumbs down" class="mx-1"
+                                    style="width:30px; height:auto" />
+                            </label>
+                        </fieldset>
+
 
                         <h4 class="card-title">
                             {{d['pos']|string + ": "}} <a href="{{d['page_url']}}">{{d['name']}}</a>
