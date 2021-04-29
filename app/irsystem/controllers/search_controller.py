@@ -19,7 +19,7 @@ def search():
 	else:
 		output_message = "Your search: " + query
 		# results = index_search(query, combined_inv_idx, combined_idf_dict, combined_doc_norms)
-		results = process_results(index_search, query, inv_idx, idf_dict, norms, breeds_info)
+		results = process_results(query, inv_idx, idf_dict, norms, breeds_info)
 		data = []
 		breeds = list(breeds_info.keys())
 		for i in range(len(results)):
