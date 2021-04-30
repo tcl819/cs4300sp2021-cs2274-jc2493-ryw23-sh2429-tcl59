@@ -2,9 +2,6 @@ from . import *
 from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 
-project_name = "Zoogle Search"
-net_id = "Thomas Lee (tcl59), Joseph Choi (jc2493), Ray Wei (ryw23), Joyce Huang (sh2429), Clara Song (cs2274)"
-
 inv_idx = load_idx()
 idf_dict = load_idf()
 norms = load_norms()
@@ -90,4 +87,4 @@ def search():
 		save_query_mat(query_mat)
 
 
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, feedback=feedback, checked=checked, none_checked=none_checked)
+	return render_template('search.html', output_message=output_message, data=data, query=query, feedback=feedback, checked=checked, none_checked=none_checked)
