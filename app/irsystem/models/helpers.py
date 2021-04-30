@@ -232,8 +232,9 @@ def query_to_vec(query, inverted_idx, idf):
     tokens = [porter_stemmer.stem(word) for word in match]
 
     for tok in tokens:
-        ind = word_to_index[tok]
-        query_vec[ind] = (1/len(tokens))/idf[tok]
+        if tok in idf:
+            ind = word_to_index[tok]
+            query_vec[ind] = (1/len(tokens))/idf[tok]
     return query_vec
 
 
