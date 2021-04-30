@@ -269,7 +269,7 @@ def rocchio(query, query_mat, input_doc_mat, a=1, b=0.5, c=0.5):
     query_mat: dictionary, query -> dictionary
         query_mat[key]['relevant']: list of IDs of relevant docs
         query_mat[key]['irrelevant']: list of IDs of irrelevant docs
-        query_mat[key]['vec']: numpy TF-IDF vector of query
+        query_mat[key]['vec']: list form of numpy TF-IDF vector of query (NOT stored as numpy array)
 
     Parameters:
     query: string
