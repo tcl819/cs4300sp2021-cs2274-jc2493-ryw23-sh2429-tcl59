@@ -131,59 +131,24 @@ def index_search(query, input_doc_mat, index, idf, doc_norms, tokenizer=treebank
     # load query_mat
     query_mat = load_query_mat()
 
-    if query in query_mat:
-        query_vec = np.array(query_mat[query]['vec'])
-        query_norm = np.linalg.norm(query_vec)
-        results = []
-
-        for i in range(len(input_doc_mat)):
-            doc_vec = input_doc_mat[i]
-            norm = np.linalg.norm(input_doc_mat[i])
-            score = np.dot(query_vec, input_doc_mat[i])/(norm*query_norm)
-            results.append((score, i))
-    else:
-        # Solve for query term frequencies
-        query_freq = dict()
-        porter_stemmer = PorterStemmer()
-        for tok in tokenizer.tokenize(query.lower()):
-            stem_tok = porter_stemmer.stem(tok)
-            if stem_tok in query_freq:
-                query_freq[stem_tok] += 1
-            else:
-                query_freq[stem_tok] = 1
-        
-        # Solve for query norm
-        q_norm = 0
-        for word in query_freq:
-            if word in idf:
-                idf_val = idf[word]
-                q_norm += (idf_val*query_freq[word])**2
-        q_norm = math.sqrt(q_norm)
-
-        # calculate numerator values of cosine similarity for each document
-        numerators = dict() # doc_id -> cumulative numerator
-        for word in index:
-            if word in idf:
-                for tup in index[word]:
-                    doc_id = tup[0]
-                    if word in query_freq:
-                        if doc_id not in numerators:
-                            numerators[doc_id] = 0
-                        numerators[doc_id] += query_freq[word] * tup[1] * idf[word]**2
-        
-        # store query and its associated query_vec in query_mat
+    if query not in query_mat:
         query_vec = query_to_vec(query, index, idf)
+
         query_mat[query] = dict()
         query_mat[query]['vec'] = query_vec.tolist()
         query_mat[query]['relevant'] = []
         query_mat[query]['irrelevant'] = []
+    else:
+        query_vec = np.array(query_mat[query]['vec'])
+    
+    query_norm = np.linalg.norm(query_vec)
+    results = []
 
-        results = []
-        # divide each numerator by the appropriate denominator, add to list in tuple form
-        for doc_id in numerators:
-            denom = q_norm * doc_norms[doc_id]
-            score = numerators[doc_id] / denom
-            results.append((score, doc_id))
+    for i in range(len(input_doc_mat)):
+        doc_vec = input_doc_mat[i]
+        norm = np.linalg.norm(input_doc_mat[i])
+        score = np.dot(query_vec, input_doc_mat[i])/(norm*query_norm)
+        results.append((score, i))
         
     # sort tuple list in descending order by score, then doc_id
     results = sorted(results, key=lambda e: (e[0], -e[1]), reverse=True)
