@@ -21,33 +21,44 @@
         <div class="form-group">
             <input id="input" type="text" name="search" class="form-control" placeholder="fluffy, energetic, etc."
                 value="{% if query %}{{query}}{% endif %}">
-
-            <div style="
-                justify-content: space-between;
-                display: flex;
-                align-items: center;">
-
-                <input type="checkbox" id="bird" name="bird">
-                <label for="bird">bird</label><br>
-
-                <input type="checkbox" id="cat" name="cat">
-                <label for="cat">cat</label><br>
-
-                <input type="checkbox" id="dog" name="dog">
-                <label for="dog">dog</label><br>
-
-                <input type="checkbox" id="fish" name="fish">
-                <label for="fish">fish</label><br>
-
-                <input type="checkbox" id="horse" name="horse">
-                <label for="horse">horse</label><br>
-
-                <input type="checkbox" id="rabbit" name="rabbit">
-                <label for="rabbit">rabbit</label><br>
-
-                <input type="checkbox" id="turtle" name="turtle">
-                <label for="turtle">turtle</label><br>
+            <div class="form-group d-block mt-2">
+                <div class="form-check form-switch form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="bird" name="bird" {% if none_checked or
+                        checked[0] %}checked{% endif %}>
+                    <label class="form-check-label" for="bird">bird</label><br>
+                </div>
+                <div class="form-check form-switch form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="cat" name="cat" {% if none_checked or checked[1]
+                        %}checked{% endif %}>
+                    <label class="form-check-label" for="cat">cat</label><br>
+                </div>
+                <div class="form-check form-switch form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="dog" name="dog" {% if none_checked or checked[2]
+                        %}checked{% endif %}>
+                    <label class="form-check-label" for="dog">dog</label><br>
+                </div>
+                <div class="form-check form-switch form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="fish" name="fish" {% if none_checked or
+                        checked[3] %}checked{% endif %}>
+                    <label class="form-check-label" for="fish">fish</label><br>
+                </div>
+                <div class="form-check form-switch form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="horse" name="horse" {% if none_checked or
+                        checked[4] %}checked{% endif %}>
+                    <label class="form-check-label" for="horse">horse</label><br>
+                </div>
+                <div class="form-check form-switch form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="rabbit" name="rabbit" {% if none_checked or
+                        checked[5] %}checked{% endif %}>
+                    <label class="form-check-label" for="rabbit">rabbit</label><br>
+                </div>
+                <div class="form-check form-switch form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="turtle" name="turtle" {% if none_checked or
+                        checked[6] %}checked{% endif %}>
+                    <label class="form-check-label" for="turtle">turtle</label><br>
+                </div>
             </div>
+
             <br>
             <button type="submit" class="btn btn-info"> Go! </button>
 

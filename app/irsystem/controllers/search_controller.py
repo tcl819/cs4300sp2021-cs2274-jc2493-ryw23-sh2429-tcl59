@@ -30,6 +30,8 @@ def search():
 	is_turtle_checked = 'turtle' in request.args
 	none_checked = not(is_bird_checked) and not(is_cat_checked) and not(is_dog_checked) and not(is_fish_checked) and not(is_horse_checked) and not(is_rabbit_checked) and not(is_turtle_checked)
 
+	checked = [is_bird_checked, is_cat_checked, is_dog_checked, is_fish_checked, is_horse_checked, is_rabbit_checked, is_turtle_checked]
+
 	if not query:
 		data = []
 		output_message = ""
@@ -88,4 +90,4 @@ def search():
 		save_query_mat(query_mat)
 
 
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, feedback=feedback)
+	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, feedback=feedback, checked=checked, none_checked=none_checked)
