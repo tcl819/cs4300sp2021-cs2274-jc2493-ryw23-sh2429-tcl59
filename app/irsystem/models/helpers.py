@@ -329,6 +329,7 @@ def process_results(query, index, idf, doc_norms, breed_info, tokenizer=treebank
         result_dict['score'] = result[0]
         result_dict['URL_petguide'] = "#" if not 'page_url' in list(breed_info[breeds[result[1]]].keys()) else breed_info[breeds[result[1]]]['page_url']
         result_dict['URL_image'] = "#" if not 'image_url' in list(breed_info[breeds[result[1]]].keys()) else breed_info[breeds[result[1]]]['image_url']
+        result_dict['type'] = breed_info[breeds[result[1]]]['type']
         final_results.append(result_dict)
     
     return final_results

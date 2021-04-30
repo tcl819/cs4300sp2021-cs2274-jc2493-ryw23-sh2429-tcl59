@@ -21,6 +21,16 @@ def search():
 	norm = norms[filter_id]
 	info = breeds_info[filter_id]
 
+	input_type = 'cat' # placeholder; 'all' for no filter
+	is_bird_checked = 'bird' in request.args
+	is_cat_checked = 'cat' in request.args
+	is_dog_checked = 'dog' in request.args
+	is_fish_checked = 'fish' in request.args
+	is_horse_checked = 'horse' in request.args
+	is_rabbit_checked = 'rabbit' in request.args
+	is_turtle_checked = 'turtle' in request.args
+	none_checked = not(is_bird_checked) and not(is_cat_checked) and not(is_dog_checked) and not(is_fish_checked) and not(is_horse_checked) and not(is_rabbit_checked) and not(is_turtle_checked)
+
 	if not query:
 		data = []
 		output_message = ""
@@ -29,20 +39,24 @@ def search():
 		# results = index_search(query, combined_inv_idx, combined_idf_dict, combined_doc_norms)
 		results = process_results(query, index, idf, norm, info)
 		data = []
+		count = 0
 		for i in range(len(results)):
-			data.append(dict())
-			data[i]['raw_name'] = results[i]['raw_name']
-			data[i]['name'] = results[i]['name']
-			data[i]['score'] = results[i]['score']
-			data[i]['text'] = results[i]['text']
-			data[i]['pos'] = i+1
-			data[i]['page_url'] = results[i]['URL_petguide']
-			data[i]['image_url'] = results[i]['URL_image']
+			if (none_checked or results[i]['type'] in request.args):
+				count = count + 1
+				dic = dict()
+				dic['raw_name'] = results[i]['raw_name']
+				dic['name'] = results[i]['name']
+				dic['score'] = results[i]['score']
+				dic['text'] = results[i]['text']
+				dic['pos'] = count
+				dic['page_url'] = results[i]['URL_petguide']
+				dic['image_url'] = results[i]['URL_image']
+				data.append(dic)
 		if (len(data) == 0):
 			data = []
 		else:
 			data = data[:10]
-	
+
 	feedback = []
 	for i in range(10):
 		f = request.args.get('rating-'+str(i+1))

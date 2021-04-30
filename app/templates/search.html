@@ -19,10 +19,39 @@
         <br><br>
 
         <div class="form-group">
-            <input id="input" type="text" name="search" class="form-control" placeholder="loud, energetic, etc."
+            <input id="input" type="text" name="search" class="form-control" placeholder="fluffy, energetic, etc."
                 value="{% if query %}{{query}}{% endif %}">
+
+            <div style="
+                justify-content: space-between;
+                display: flex;
+                align-items: center;">
+
+                <input type="checkbox" id="bird" name="bird">
+                <label for="bird">bird</label><br>
+
+                <input type="checkbox" id="cat" name="cat">
+                <label for="cat">cat</label><br>
+
+                <input type="checkbox" id="dog" name="dog">
+                <label for="dog">dog</label><br>
+
+                <input type="checkbox" id="fish" name="fish">
+                <label for="fish">fish</label><br>
+
+                <input type="checkbox" id="horse" name="horse">
+                <label for="horse">horse</label><br>
+
+                <input type="checkbox" id="rabbit" name="rabbit">
+                <label for="rabbit">rabbit</label><br>
+
+                <input type="checkbox" id="turtle" name="turtle">
+                <label for="turtle">turtle</label><br>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-info"> Go! </button>
+
         </div>
-        <button type="submit" class="btn btn-info"> Go! </button>
     </form>
 
     <div class="container">
