@@ -144,11 +144,13 @@ def index_search(query, input_doc_mat, index, idf, doc_norms, tokenizer=treebank
     else:
         # Solve for query term frequencies
         query_freq = dict()
+        porter_stemmer = PorterStemmer()
         for tok in tokenizer.tokenize(query.lower()):
-            if tok in query_freq:
-                query_freq[tok] += 1
+            stem_tok = porter_stemmer.stem(tok)
+            if stem_tok in query_freq:
+                query_freq[stem_tok] += 1
             else:
-                query_freq[tok] = 1
+                query_freq[stem_tok] = 1
         
         # Solve for query norm
         q_norm = 0
@@ -229,7 +231,6 @@ def query_to_vec(query, inverted_idx, idf):
     match = re.findall(regex,query)
     tokens = [porter_stemmer.stem(word) for word in match]
 
-    print(tokens)
     for tok in tokens:
         ind = word_to_index[tok]
         query_vec[ind] = (1/len(tokens))/idf[tok]
@@ -262,7 +263,7 @@ def create_tf_idf_mat(n_breeds, index, idf):
     return arr
 
 
-def rocchio(query, query_mat, input_doc_mat, a=1, b=0.5, c=0.5):
+def rocchio(query, query_mat, input_doc_mat, a=1, b=0.8, c=0.1):
     """
     Precondition: query is in query_mat
 
