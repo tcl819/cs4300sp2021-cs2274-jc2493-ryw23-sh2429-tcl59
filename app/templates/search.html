@@ -8,16 +8,24 @@
 
 <body>
     <div class="content">
-        <form class="form-inline global-search" method="get">
-            <h1 style="font-size: 55px; font-family:Futura">
-                Zoogle Search
-            </h1>
+        <div class="container">
+            <form class="form-inline global-search" method="get">
+                <h1 style="font-size: 55px; font-family:Futura">
+                    Zoogle Search
+                </h1>
 
-            <br><br>
+                <br><br>
+                <div class="row justify-content-center">
+                    <div class="col-10">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="fluffy, energetic, etc." name="search"
+                                id="search-input" value="{% if query %}{{query}}{% endif %}" />
+                            <button class="btn btn-outline-primary" type="submit">Search</button>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <input id="input" type="text" name="search" class="form-control" placeholder="fluffy, energetic, etc."
-                    value="{% if query %}{{query}}{% endif %}">
+
                 <div class="form-group d-block mt-2">
                     <div class="form-check form-switch form-check-inline">
                         <input type="checkbox" class="form-check-input" id="bird" name="bird" {% if none_checked or
@@ -56,11 +64,9 @@
                     </div>
                 </div>
 
-                <br>
-                <button type="submit" class="btn btn-info"> Go! </button>
+            </form>
+        </div>
 
-            </div>
-        </form>
 
         <div class="container">
             <h1 class="text-center">{{output_message}}</h1>
