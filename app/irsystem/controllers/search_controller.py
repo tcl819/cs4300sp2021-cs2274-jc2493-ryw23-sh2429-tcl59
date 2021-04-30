@@ -21,7 +21,6 @@ def search():
 	norm = norms[filter_id]
 	info = breeds_info[filter_id]
 
-	input_type = 'cat' # placeholder; 'all' for no filter
 	is_bird_checked = 'bird' in request.args
 	is_cat_checked = 'cat' in request.args
 	is_dog_checked = 'dog' in request.args
