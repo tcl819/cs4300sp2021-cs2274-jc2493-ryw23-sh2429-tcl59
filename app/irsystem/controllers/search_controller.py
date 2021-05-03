@@ -39,7 +39,7 @@ def search():
 		data = []
 		count = 0
 		for i in range(len(results)):
-			if (none_checked or results[i]['type'] in request.args):
+			if ((none_checked or results[i]['type'] in request.args) and (results[i]['score'] != 0)):
 				count = count + 1
 				dic = dict()
 				dic['raw_name'] = results[i]['raw_name']
@@ -50,8 +50,8 @@ def search():
 				dic['page_url'] = results[i]['URL_petguide']
 				dic['image_url'] = results[i]['URL_image']
 				data.append(dic)
-		if (len(data) == 0):
-			data = []
+		if (len(data) < 10):
+			data = data
 		else:
 			data = data[:10]
 
