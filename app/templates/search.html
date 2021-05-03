@@ -6,6 +6,14 @@
     <title>Zoogle Search</title>
 </head>
 
+
+<script type="text/javascript">
+    function addToQuery(text) {
+        // window.location.href = "/?queryType=" + queryType + "&query=" + insp + "&keyword=&popSlide=0";
+        document.getElementById("search-input").value += " " + text;
+    }
+</script>
+
 <body>
     <div class="content">
         <div class="container">
@@ -25,6 +33,27 @@
                     </div>
                 </div>
 
+                <div class="form-group d-block mt-2">
+                    <label class="form-check-label" for="Suggestions">Suggested search terms: </label>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                        onclick="addToQuery('fluffy')">fluffy</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                        onclick="addToQuery('race')">race</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                        onclick="addToQuery('energetic')">energetic</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                        onclick="addToQuery('lap')">lap</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                        onclick="addToQuery('friendly')">friendly</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                        onclick="addToQuery('small')">small</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                        onclick="addToQuery('large')">large</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                        onclick="addToQuery('lazy')">lazy</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="button" aria-pressed="false"
+                        onclick="addToQuery('strong')">strong</button>
+                </div>
 
                 <div class="form-group d-block mt-2">
                     <div class="form-check form-switch form-check-inline">
