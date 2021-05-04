@@ -49,7 +49,8 @@ def search():
 				dic['pos'] = count
 				dic['page_url'] = results[i]['URL_petguide']
 				dic['image_url'] = results[i]['URL_image']
-				data.append(dic)
+				if dic['score'] > 0:
+					data.append(dic)
 		if (len(data) < 10):
 			data = data
 		else:
