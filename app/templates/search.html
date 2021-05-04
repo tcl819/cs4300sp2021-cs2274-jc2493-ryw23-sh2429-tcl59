@@ -2,7 +2,7 @@
 
 <head>
     <link rel="stylesheet" href="/static/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/main.css?v=2">
     <title>Zoogle Search</title>
 </head>
 
@@ -15,8 +15,9 @@
 </script>
 
 <body>
-    <div class="content">
-        <div class="container">
+    <div class="content row">
+        <div class="col-2 side-banner"></div>
+        <div class="col-8 zoogle-container">
             <form class="form-inline global-search" method="get">
                 <h1 style="font-size: 55px; font-family:Futura">
                     Zoogle Search
@@ -94,10 +95,7 @@
                 </div>
 
             </form>
-        </div>
 
-
-        <div class="container">
             <h1 class="text-center">{{output_message}}</h1>
             <br>
             {% if data %}
@@ -158,19 +156,21 @@
             <br>
             <p>No items matched. Try a different query!</p>
             {% endif %}
-        </div>
-    </div>
 
-    <footer>
-        <div class="container pt-3 mt-5">
-            <p>
-                Project Name: Zoogle Search <br>
-                Group Members: Thomas Lee (tcl59), Joseph Choi (jc2493), Ray Wei (ryw23), Joyce Huang (sh2429), Clara
-                Song
-                (cs2274)
-            </p>
+            <footer>
+                <div class="container pt-3 mt-5">
+                    <p>
+                        Project Name: Zoogle Search <br>
+                        Group Members: Thomas Lee (tcl59), Joseph Choi (jc2493), Ray Wei (ryw23), Joyce Huang (sh2429),
+                        Clara
+                        Song
+                        (cs2274)
+                    </p>
+                </div>
+            </footer>
         </div>
-    </footer>
+        <div class="col-2 side-banner"></div>
+    </div>
 </body>
 
 </html>
