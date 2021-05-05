@@ -46,11 +46,23 @@ footer {
 }
 
 .zoogle-container {
-    padding-top: 15%
+    padding-top: 150px;
 }
 
 .side-banner {
     background-image: url("img/bg.png");
     background-repeat: repeat-y;
     background-position: center;
+}
+
+.search-bar-img {
+    position: absolute;
+    top: 245px;
+    left: 212px;
+    z-index: -1;
+}
+
+.grayscale {
+    filter: grayscale(100%);
+    opacity: 30%;
 }
